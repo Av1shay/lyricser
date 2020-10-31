@@ -1,0 +1,68 @@
+version: '3.8'
+services:
+
+  # PHP Service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: avishay28/php
+    container_name: api
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: api
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    depends_on:
+      - webserver
+      - db
+    volumes:
+      - ./api:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - backend-network
+
+  # Nginx Service
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+    - ./api:/var/www
+    - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - backend-network
+
+  # MySQL DB service
+  db:
+    image: mysql:5.7
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: lyricser
+      MYSQL_ROOT_PASSWORD: a123456z
+      SERVICE_TAGS: dev
+      SERVICE_NAME: db
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - backend-network
+
+#Volumes
+volumes:
+  dbdata:
+    driver: local
+
+# Networks
+networks:
+  backend-network:
+    driver: bridge

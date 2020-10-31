@@ -1,0 +1,59 @@
+.idea/
+
+#----------- API --------------#
+api/node_modules
+api/public/hot
+api/public/storage
+api/storage/*.key
+api/vendor
+api/.env
+api/.env.backup
+api/.phpunit.result.cache
+api/Homestead.json
+api/Homestead.yaml
+api/npm-debug.log
+api/yarn-error.log
+
+#----------- CLIENT ------------#
+client/.DS_STORE
+client/dist/
+client/bazel-out
+client/integration/bazel/bazel-*
+client/*.log
+client/node_modules
+# Include when developing application packages.
+client/pubspec.lock
+client/.c9
+client/.idea/
+client/.devcontainer/*
+client/!.devcontainer/README.md
+client/!.devcontainer/recommended-devcontainer.json
+client/!.devcontainer/recommended-Dockerfile
+client/.settings/
+client/.vscode/launch.json
+client/.vscode/settings.json
+client/.vscode/tasks.json
+client/*.swo
+client/modules/.settings
+client/modules/.vscode
+client/.vimrc
+client/.nvimrc
+# Don't check in secret files
+client/*secret.js
+# Ignore npm/yarn debug log
+client/npm-debug.log
+client/yarn-error.log
+# build-analytics
+client/.build-analytics
+# rollup-test output
+client/modules/rollup-test/dist/
+# User specific bazel settings
+client/.bazelrc.user
+# User specific ng-dev settings
+client/.ng-dev.user*
+client/.notes.md
+client/baseline.json
+# Ignore .history for the xyz.local-history VSCode extension
+client/.history
+client/tools/gulp-tasks/cldr/cldr-data/
+client/.husky/_
