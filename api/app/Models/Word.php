@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Word extends Model
 {
     use HasFactory;
+
+    public function song()
+    {
+        return $this->belongsTo(Song::class);
+    }
 }

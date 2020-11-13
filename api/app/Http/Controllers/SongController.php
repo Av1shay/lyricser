@@ -28,11 +28,28 @@ class SongController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function create(Request $request)
     {
-        $stop =  'here';
+        $inputData = $request->all();
+        $uploadedFile = $request->file('file');
+        $filename = time().$uploadedFile->getClientOriginalName();
+
+        $songData = [
+            'title' => $inputData['title'],
+            'writer' => $inputData['writer'],
+            'composers' => $inputData['composers'],
+            'performers' => $inputData['performers'],
+            'published_at' => $inputData['published_at'],
+            'text_filename' => $filename,
+            'text_file_format' => $inputData['text_file_format'],
+            'stanzas_delimiter' => $inputData['stanzas_delimiter'],
+            'upload_by' => auth()->id() ?? 1,
+        ];
+
+        $this->songService->add($songData, $uploadedFile);
     }
 
     /**

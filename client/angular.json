@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "big-comparison": {
+    "lyricser": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/big-comparison",
+            "outputPath": "dist/lyricser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,12 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.css",
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.sass"
             ],
             "scripts": [
-              "./node_modules/jquery/dist/jquery.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.js"
+              "./node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
           "configurations": {
@@ -70,18 +70,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "big-comparison:build"
+            "browserTarget": "lyricser:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "big-comparison:build:production"
+              "browserTarget": "lyricser:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "big-comparison:build"
+            "browserTarget": "lyricser:build"
           }
         },
         "test": {
@@ -95,9 +95,7 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "src/styles.sass"
-            ],
+            "styles": [],
             "scripts": []
           }
         },
@@ -118,18 +116,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "big-comparison:serve"
+            "devServerTarget": "lyricser:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "big-comparison:serve:production"
+              "devServerTarget": "lyricser:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "big-comparison",
+  "defaultProject": "lyricser",
   "cli": {
     "analytics": "b5ffe962-8abf-4118-960b-21a88df9a319"
   }

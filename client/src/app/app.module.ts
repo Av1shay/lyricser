@@ -6,23 +6,31 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { ApiInterceptorService } from './services/api-interceptor.service';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { GeneralSelectQueryComponent } from './components/dashboard/general-select-query/general-select-query.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import SongService from './services/song.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LayoutModule } from '@angular/cdk/layout';
+import { NavComponent } from './components/nav/nav.component';
+import { SongsComponent } from './components/songs/songs.component';
+import { WordsComponent } from './components/words/words.component';
+import { PersonalAreaComponent } from './components/personal-area/personal-area.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
-    GeneralSelectQueryComponent,
+    NavComponent,
+    SongsComponent,
+    WordsComponent,
+    PersonalAreaComponent,
   ],
     imports: [
         BrowserModule,
         HttpClientModule,
         AppRoutingModule,
         ReactiveFormsModule,
+        BrowserAnimationsModule,
+        LayoutModule,
     ],
   providers: [
     SongService,

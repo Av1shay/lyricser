@@ -1,5 +1,5 @@
 {
-  "name": "big-comparison",
+  "name": "lyricser",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~10.1.4",
+    "@angular/cdk": "^10.2.7",
     "@angular/common": "~10.1.4",
     "@angular/compiler": "~10.1.4",
     "@angular/core": "~10.1.4",
@@ -20,7 +21,7 @@
     "@angular/platform-browser-dynamic": "~10.1.4",
     "@angular/router": "~10.1.4",
     "@okta/okta-angular": "^2.2.0",
-    "bootstrap": "^4.5.2",
+    "bootstrap": "^4.5.3",
     "jquery": "^3.5.1",
     "rxjs": "~6.6.0",
     "rxjs-compat": "^6.6.3",

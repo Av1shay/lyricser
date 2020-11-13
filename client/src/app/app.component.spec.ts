@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'big-comparison'`, () => {
+  it(`should have as title 'lyricser'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('big-comparison');
+    expect(app.title).toEqual('lyricser');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('big-comparison app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('lyricser app is running!');
   });
 });

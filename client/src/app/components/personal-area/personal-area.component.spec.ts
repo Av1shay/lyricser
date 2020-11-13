@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DashboardComponent } from './dashboard.component';
+import { PersonalAreaComponent } from './personal-area.component';
 
-describe('SongsComponent', () => {
-  let component: DashboardComponent;
-  let fixture: ComponentFixture<DashboardComponent>;
+describe('PersonalAreaComponent', () => {
+  let component: PersonalAreaComponent;
+  let fixture: ComponentFixture<PersonalAreaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DashboardComponent ]
+      declarations: [ PersonalAreaComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DashboardComponent);
+    fixture = TestBed.createComponent(PersonalAreaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

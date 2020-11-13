@@ -4,7 +4,9 @@
 namespace App\Services\Contracts;
 
 
+use Illuminate\Http\UploadedFile;
+
 interface SongServiceInterface
 {
-    public function upload(array $fileData);
+    public function add(array $songData, UploadedFile $uploadedFile);
 }
