@@ -12,12 +12,17 @@ class LocalUploader implements UploaderInterface
 {
     protected $driver = 'local';
 
-    public function put(string $filename, UploadedFile $uploadedFile): void
+    public function put(string $filename, UploadedFile $uploadedFile): string
     {
-        Storage::disk($this->driver)->putFileAs(
-            'files/'.$filename,
+        return Storage::disk($this->driver)->putFileAs(
+            'songs',
             $uploadedFile,
             $filename,
         );
+    }
+
+    public function getFileContent(string $path): string
+    {
+        return Storage::disk($this->driver)->get($path);
     }
 }

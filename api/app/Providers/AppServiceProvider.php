@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repositories\Contracts\SongRepositoryInterface;
+use App\Repositories\Contracts\WordRepositoryInterface;
 use App\Repositories\SongRepository;
+use App\Repositories\WordRepository;
 use App\Services\Contracts\SongServiceInterface;
 use App\Services\Contracts\UploaderInterface;
 use App\Services\LocalUploader;
@@ -19,9 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         // Provide songs repository
         $this->app->singleton(SongRepositoryInterface::class, SongRepository::class);
+
+        // Provide words repository
+        $this->app->singleton(WordRepositoryInterface::class, WordRepository::class);
 
         // Provide uploader
         $this->app->singleton(UploaderInterface::class, LocalUploader::class);

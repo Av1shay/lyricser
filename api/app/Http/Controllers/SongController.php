@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateSong;
 use App\Models\Song;
 use App\Services\Contracts\SongServiceInterface;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
@@ -18,11 +20,13 @@ class SongController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        $songs = $this->songService->findAll();
+
+        return response()->json($songs);
     }
 
     /**
@@ -33,34 +37,40 @@ class SongController extends Controller
      */
     public function create(Request $request)
     {
-        $inputData = $request->all();
-        $uploadedFile = $request->file('file');
-        $filename = time().$uploadedFile->getClientOriginalName();
 
-        $songData = [
-            'title' => $inputData['title'],
-            'writer' => $inputData['writer'],
-            'composers' => $inputData['composers'],
-            'performers' => $inputData['performers'],
-            'published_at' => $inputData['published_at'],
-            'text_filename' => $filename,
-            'text_file_format' => $inputData['text_file_format'],
-            'stanzas_delimiter' => $inputData['stanzas_delimiter'],
-            'upload_by' => auth()->id() ?? 1,
-        ];
-
-        $this->songService->add($songData, $uploadedFile);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateSong $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(CreateSong $request)
     {
-        //
+        $uploadedFile = $request->file('file');
+        $filename = time().$uploadedFile->getClientOriginalName();
+
+        $songData = $request->only([
+            'title',
+            'writer',
+            'composers',
+            'performers',
+            'published_at',
+            'stanzas_delimiter',
+        ]);
+
+        $fileData = [
+            'text_filename' => $filename,
+            'text_file_format' => pathinfo($filename, PATHINFO_EXTENSION),
+        ];
+
+        try {
+            $newSong = $this->songService->add(array_merge($songData, $fileData), $uploadedFile);
+            return response()->json($newSong);
+        } catch (\Throwable $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -88,7 +98,7 @@ class SongController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Song  $song
      * @return \Illuminate\Http\Response
      */

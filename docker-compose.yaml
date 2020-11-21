@@ -57,9 +57,27 @@ services:
     networks:
       - backend-network
 
+  # Redis service
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "6379:6379"
+    environment:
+      SERVICE_TAGS: dev
+      SERVICE_NAME: redis
+    volumes:
+      - redisdata:/data
+    networks:
+      - backend-network
+
 #Volumes
 volumes:
   dbdata:
+    driver: local
+  redisdata:
     driver: local
 
 # Networks

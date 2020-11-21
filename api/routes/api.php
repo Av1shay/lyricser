@@ -19,4 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/song', [SongController::class, 'create']);
+Route::get('/song', [SongController::class, 'index']);
+
+Route::post('/song', [SongController::class, 'store']);
