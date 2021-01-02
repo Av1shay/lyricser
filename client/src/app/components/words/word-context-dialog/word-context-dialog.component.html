@@ -1,0 +1,14 @@
+<div class="word-context-dialog">
+  <div class="position-relative">
+    <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h5>{{ word }}</h5>
+  </div>
+
+  <ul class="list-group list-group-flush" mat-dialog-content>
+    <li *ngFor="let context of contextList" class="list-group-item">
+      {{ context.before }} <strong>{{ word }}</strong> {{ context.after }}
+    </li>
+  </ul>
+</div>

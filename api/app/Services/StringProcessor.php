@@ -4,7 +4,10 @@
 namespace App\Services;
 
 
+use App\Enums\WordPositions;
 use App\Models\Song;
+use App\Services\Contracts\WordServiceInterface;
+use Illuminate\Support\Facades\Cache;
 use App\Repositories\Contracts\WordRepositoryInterface;
 use App\Services\Contracts\UploaderInterface;
 use Carbon\Carbon;
@@ -13,19 +16,13 @@ use Exception;
 
 class StringProcessor
 {
-    /**
-     * @var WordRepositoryInterface
-     */
-    protected $wordRepository;
+    protected WordServiceInterface $wordService;
 
-    /**
-     * @var UploaderInterface
-     */
-    protected $uploader;
+    protected UploaderInterface $uploader;
 
-    public function __construct(WordRepositoryInterface $wordRepository, UploaderInterface $uploader)
+    public function __construct(WordServiceInterface $wordService, UploaderInterface $uploader)
     {
-        $this->wordRepository = $wordRepository;
+        $this->wordService = $wordService;
         $this->uploader = $uploader;
     }
 
@@ -36,7 +33,7 @@ class StringProcessor
      * @param Song $song
      * @throws Exception
      */
-    public function processWords(Song $song): void
+    public function processSongWords(Song $song): void
     {
         if (!isset($song->text_filename, $song->stanzas_delimiter)) {
             throw new Exception('Missing Song properties text_filename and/or stanzas_delimiter');
@@ -52,7 +49,6 @@ class StringProcessor
         foreach ($stanzas as $stanzaIndex => $stanzaContent) {
             $wordsOffset = 0;
             $stanzaNum = $stanzaIndex + 1;
-            $stanzaContent = trim(str_replace("\n", ' ', $stanzaContent));
             $lines = explode(PHP_EOL, trim($stanzaContent, "\n"));
             $linesCount = count($lines);
 
@@ -64,14 +60,14 @@ class StringProcessor
 
                 // Go over the words in each line
                 foreach ($words as $wordIndex => $word) {
-                    $startIndex = stripos($stanzaContent, $word, $wordsOffset);
+                    $startIndex = strpos($stanzaContent, $word, $wordsOffset);
 
                     if ($startIndex == 0) { // This word is at the beginning of the stanza?
-                        $position = 'start';
+                        $position = WordPositions::Start;
                     } else if ($lineIndex == ($linesCount - 1) && $wordIndex == ($wordsCount - 1)) { // This word is at the end of the stanza?
-                        $position = 'end';
+                        $position = WordPositions::End;
                     } else {
-                        $position = 'middle';
+                        $position = WordPositions::Middle;
                     }
 
                     $wordsToInsert[] = [
@@ -85,14 +81,20 @@ class StringProcessor
                         'updated_at' => $now,
                     ];
 
-                    // increase the offset to skip this word in the next iterations
-                    $wordsOffset += strlen($word);
+                    // increase the offset to skip this word in the next iterations, add one for space
+                    $wordsOffset += strlen($word) + 1;
                 }
             }
         }
 
         if (count($wordsToInsert) > 0) {
-            $this->wordRepository->insertsWithTransaction($wordsToInsert);
+            $this->wordService->addWords($wordsToInsert);
         }
+
+        $song->words_processed = true;
+
+        $song->save();
+
+        $this->wordService->refreshWordsIndexCache();
     }
 }

@@ -24,9 +24,11 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     pkg-config
 
-RUN pecl install \
-    xdebug
-    redis
+RUN pecl install redis-5.3.2 \
+    && docker-php-ext-enable redis
+
+RUN pecl install xdebug-2.9.8 \
+    && docker-php-ext-enable xdebug
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* \
@@ -36,8 +38,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* \
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl pdo
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install gd
-RUN docker-php-ext-enable xdebug
-RUN docker-php-ext-enable redis
 
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

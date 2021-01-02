@@ -39,6 +39,6 @@ class ProcessWords implements ShouldQueue
      */
     public function handle(StringProcessor $processor)
     {
-        $processor->processWords($this->song);
+        $processor->processSongWords($this->song);
     }
 }

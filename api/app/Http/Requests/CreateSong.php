@@ -26,8 +26,8 @@ class CreateSong extends FormRequest
         return [
             'title' => 'required|unique:songs|max:255',
             'writer' => 'required|max:50',
-            'composers' => 'required|string',
-            'performers' => 'required|string',
+            'composers' => 'array',
+            'performers' => 'array',
             'published_at' => 'required|date',
             'stanzas_delimiter' => 'required|string|size:1',
             'file' => 'file|max:10|mimetypes:text/plain' // max size in KB

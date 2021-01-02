@@ -8,8 +8,10 @@ use App\Repositories\SongRepository;
 use App\Repositories\WordRepository;
 use App\Services\Contracts\SongServiceInterface;
 use App\Services\Contracts\UploaderInterface;
+use App\Services\Contracts\WordServiceInterface;
 use App\Services\LocalUploader;
 use App\Services\SongService;
+use App\Services\WordService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SongServiceInterface::class, function($app) {
             return new SongService($app->make(SongRepositoryInterface::class), $app->make(UploaderInterface::class));
         });
+
+        $this->app->singleton(WordServiceInterface::class, function($app) {
+            return new WordService($app->make(WordRepositoryInterface::class));
+        });
     }
 
     /**
@@ -43,6 +49,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
     }
 }

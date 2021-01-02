@@ -26,13 +26,28 @@ class SongRepository implements SongRepositoryInterface
         return $this->song->create($data);
     }
 
-    public function getById(int $id): Song
+    public function getById(int $id): ?Song
     {
         return $this->song->find($id);
     }
 
     public function findAll(): Collection
     {
-        return $this->song->all();
+        return Song::orderBy('updated_at', 'desc')->get();
+    }
+
+    public function query(array $data): Collection
+    {
+        $query = Song::query();
+
+        if ($data['title']) {
+            $query->where('title', 'like', "%{$data['title']}%");
+        }
+
+        if ($data['maxResults']) {
+            $query->limit($data['maxResults']);
+        }
+
+        return $query->get();
     }
 }

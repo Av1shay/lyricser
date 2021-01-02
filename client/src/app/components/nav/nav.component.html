@@ -6,15 +6,36 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/">Song <span class="sr-only">(current)</span></a>
+      <li class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" routerLink="/songs">Song <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" routerLink="words">Words Query</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" routerLink="personal-area">Personal Area</a>
       </li>
     </ul>
+
+    <div class="user-area">
+      <div *ngIf="currentUser; else loggedOutBlock">
+        <div class="dropdown show">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Howdy, {{ currentUser.name.split(' ')[0] || '' }}
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" (click)="logout()">Logout</a>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #loggedOutBlock>
+        <div class="logged-out-area">
+          <a routerLink="login">Log In</a> |
+          <a routerLink="register">Sign In</a>
+        </div>
+      </ng-template>
+    </div>
   </div>
 </nav>

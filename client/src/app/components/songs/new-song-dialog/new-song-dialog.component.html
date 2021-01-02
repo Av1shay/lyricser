@@ -1,0 +1,99 @@
+<div class="new-song-dialog">
+  <h3>Add new song</h3>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="new-song-frm" #addNewSongForm>
+
+    <div *ngIf="form.errors?.generalError" class="alert alert-danger" role="alert">
+      {{ form.errors.generalError }}
+    </div>
+
+    <div class="form-group">
+      <label for="songTitle">Title</label>
+      <input
+        type="text"
+        id="songTitle"
+        formControlName="title"
+        placeholder="Enter Title"
+        [ngClass]="{'form-control': true, 'is-invalid': form.controls['title'].invalid && (form.controls['title'].dirty || form.controls['title'].touched)}"
+      >
+      <small *ngIf="form.controls['title'].errors?.required" class="form-text invalid-feedback">Title is required.</small>
+      <small *ngIf="form.controls['title'].errors?.serverError" class="form-text invalid-feedback">{{ form.controls['title'].errors.serverError }}</small>
+    </div>
+
+    <div class="form-group">
+      <label for="songWriter">Writer</label>
+      <input
+        type="text"
+        id="songWriter"
+        formControlName="writer"
+        placeholder="Enter Writer"
+        [ngClass]="{'form-control': true, 'is-invalid': form.controls['writer'].invalid && (form.controls['writer'].dirty || form.controls['writer'].touched)}"
+      >
+      <small class="form-text invalid-feedback">Writer is required.</small>
+    </div>
+
+    <div class="form-group">
+      <label for="songComposers">Composers</label>
+      <textarea class="form-control" id="songComposers" formControlName="composers" rows="3" aria-describedby="composersHelp"></textarea>
+      <small id="composersHelp" class="form-text text-muted">Each composer in a new line</small>
+    </div>
+
+    <div class="form-group">
+      <label for="songPerformers">Performers</label>
+      <textarea class="form-control" id="songPerformers" formControlName="performers" rows="3" aria-describedby="performersHelp"></textarea>
+      <small id="performersHelp" class="form-text text-muted">Each performer in a new line</small>
+    </div>
+
+    <div class="form-group">
+      <label for="songPublishedAt">Published At</label>
+      <div class="col-sm-5 p-sm-0">
+        <input
+          type="date"
+          id="songPublishedAt"
+          formControlName="publishedAt"
+          [ngClass]="{'form-control': true, 'is-invalid': form.controls['publishedAt'].invalid && (form.controls['publishedAt'].dirty || form.controls['publishedAt'].touched)}"
+        >
+        <small class="form-text invalid-feedback">Published At is required.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="songStanzasDelimiter">Stanzas Delimiter</label>
+      <div class="form-row">
+        <div class="col-sm-2">
+          <input type="text" maxlength="1" class="form-control" id="songStanzasDelimiter" formControlName="stanzasDelimiter" aria-describedby="stanzasDelimiterHelp" placeholder="/">
+        </div>
+      </div>
+      <small id="stanzasDelimiterHelp" class="form-text text-muted">Char delimiter that separates between the stanzas. Default is "/".</small>
+    </div>
+
+    <div class="form-group">
+      <div class="custom-file mb-5">
+        <label for="songFile">Lyrics File</label>
+        <div class="col-sm-5 p-sm-0">
+          <input
+            type="file"
+            id="songFile"
+            formControlName="file"
+            aria-describedby="fileHelp"
+            [ngClass]="{'custom-file-input': true, 'is-invalid': form.controls['file'].invalid && form.controls['file'].dirty}"
+            (change)="onFileChange($event)"
+          >
+          <label class="custom-file-label" for="songFile">{{ songFile?.name || 'Choose file...' }}</label>
+          <ng-container *ngIf="form.controls['file'].errors">
+            <small *ngIf="form.controls['file'].errors.required" class="form-text invalid-feedback">File is required.</small>
+            <small *ngIf="form.controls['file'].errors.extension" class="form-text invalid-feedback">Only txt files allowed.</small>
+            <small *ngIf="form.controls['file'].errors.fileSize" class="form-text invalid-feedback">Max file size allowed: 20KB</small>
+          </ng-container>
+        </div>
+        <small id="fileHelp" class="form-text text-muted">Supported format: txt.</small>
+      </div>
+    </div>
+
+    <div class="form-group text-right">
+      <button type="submit" class="btn btn-secondary mr-2" (click)="onNoClick()">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!form.valid">Submit</button>
+      <mat-spinner *ngIf="showLoader" [diameter]="20" class="d-inline-block align-middle ml-2"></mat-spinner>
+    </div>
+  </form>
+
+</div>

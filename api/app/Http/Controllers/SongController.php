@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\SongNotFoundException;
 use App\Http\Requests\CreateSong;
 use App\Models\Song;
 use App\Services\Contracts\SongServiceInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
 {
-    private $songService;
+    protected $songService;
 
     public function __construct(SongServiceInterface $songService)
     {
@@ -20,13 +22,50 @@ class SongController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request): JsonResponse
     {
-        $songs = $this->songService->findAll();
+        $query = $request->only(['title', 'maxResults',]);
+
+        $data = [
+            'title' => isset($query['title']) ? urldecode($query['title']) : null,
+            'maxResults' => isset($query['maxResults']) ? intval($query['maxResults']) : null,
+        ];
+
+        $songs = $this->songService->querySongs($data);
 
         return response()->json($songs);
+    }
+
+    /**
+     * Get a specific resource.
+     *
+     * @param $id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getById($id, Request $request): JsonResponse
+    {
+        $songId = intval($id);
+
+        try {
+            $song = $this->songService->getById($songId);
+        } catch (Exception $exception) {
+            return response()->json(['errorMessage' => $exception->getMessage(), 400]);
+        }
+
+        if (!$song) {
+            return response()->json(['errorMessage' => 'Could not find song with ID ' . $songId], 404);
+        }
+
+        if ($request->query('withLyrics') == 1) {
+            $lyrics = $this->songService->getLyrics($songId);
+            $song['lyrics'] = $lyrics;
+        }
+
+        return response()->json($song);
     }
 
     /**
@@ -46,7 +85,7 @@ class SongController extends Controller
      * @param CreateSong $request
      * @return JsonResponse
      */
-    public function store(CreateSong $request)
+    public function store(CreateSong $request): JsonResponse
     {
         $uploadedFile = $request->file('file');
         $filename = time().$uploadedFile->getClientOriginalName();
@@ -71,50 +110,5 @@ class SongController extends Controller
         } catch (\Throwable $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Song  $song
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Song $song)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Song  $song
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Song $song)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param  \App\Models\Song  $song
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Song $song)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Song  $song
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Song $song)
-    {
-        //
     }
 }

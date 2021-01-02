@@ -1,0 +1,21 @@
+// Override bootstrap stuff
+$container-max-widths: (
+  xl: 1640px,
+);
+
+
+// Import bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-spinner {
+  margin: 0 auto;
+  circle {
+    stroke: #6c757d;
+  }
+}
+.font-size-80 {
+  font-size: 80% !important;
+}

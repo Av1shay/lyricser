@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use App\Exceptions\SongNotFoundException;
 use App\Jobs\ProcessWords;
 use App\Models\Song;
 use App\Repositories\Contracts\SongRepositoryInterface;
@@ -48,12 +49,13 @@ class SongService implements SongServiceInterface
         return $song;
     }
 
+
     /**
      * @param int $id
      * @return Song
      * @throws Exception
      */
-    public function getById(int $id): Song
+    public function getById(int $id): ?Song
     {
         if ($id < 1) {
             throw new Exception('$id param must be greater then 0');
@@ -62,8 +64,32 @@ class SongService implements SongServiceInterface
         return $this->songRepository->getById($id);
     }
 
+
+    public function getLyrics(int $id): string
+    {
+        if ($id < 1) {
+            throw new Exception('$id param must be greater then 0');
+        }
+
+        $song = $this->songRepository->getById($id);
+
+        if (!$song) {
+            return '';
+        }
+
+        $songContent = $this->uploader->getFileContent($song->text_filename);
+
+        return str_replace($song->stanzas_delimiter, "\n", $songContent);
+    }
+
     public function findAll(): Collection
     {
-        return $this->songRepository->findAll();
+        return $this->songRepository
+            ->findAll();
+    }
+
+    public function querySongs(array $data): Collection
+    {
+        return $this->songRepository->query($data);
     }
 }

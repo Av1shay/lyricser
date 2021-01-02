@@ -10,7 +10,10 @@ export class ApiInterceptorService implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const apiReq = req.clone({ url: this.apiUrl });
-    return next.handle(apiReq);
+    req = req.clone({
+      withCredentials: true
+    });
+
+    return next.handle(req);
   }
 }
