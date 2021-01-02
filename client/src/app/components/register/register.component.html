@@ -7,16 +7,45 @@
       <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="register-frm">
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="email" class="form-control" id="name" formControlName="name" placeholder="Enter name">
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            formControlName="name"
+            placeholder="Enter name"
+            [ngClass]="{'form-control': true, 'is-invalid': registrationForm.controls['name'].invalid && (registrationForm.controls['name'].dirty || registrationForm.controls['name'].touched)}"
+          >
+          <small *ngIf="registrationForm.controls['name'].errors?.required" class="form-text invalid-feedback">Name is required.</small>
+          <small *ngIf="registrationForm.controls['name'].errors?.serverError" class="form-text invalid-feedback">{{ registrationForm.controls['name'].errors.serverError }}</small>
         </div>
         <div class="form-group">
           <label for="loginEmail">Email address</label>
-          <input type="email" class="form-control" id="loginEmail" formControlName="email" aria-describedby="emailHelp" placeholder="Enter email">
+          <input
+            type="email"
+            class="form-control"
+            id="loginEmail"
+            formControlName="email"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+            [ngClass]="{'form-control': true, 'is-invalid': registrationForm.controls['email'].invalid && (registrationForm.controls['email'].dirty || registrationForm.controls['email'].touched)}"
+          >
+          <small *ngIf="registrationForm.controls['email'].errors?.required" class="form-text invalid-feedback">Email is required.</small>
+          <small *ngIf="registrationForm.controls['email'].errors?.serverError" class="form-text invalid-feedback">{{ registrationForm.controls['email'].errors.serverError }}</small>
           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
         </div>
         <div class="form-group">
           <label for="loginPassword">Password</label>
-          <input type="password" class="form-control" id="loginPassword" formControlName="password" placeholder="Password" autocomplete="off">
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            formControlName="password"
+            placeholder="Password"
+            autocomplete="off"
+            [ngClass]="{'form-control': true, 'is-invalid': registrationForm.controls['password'].invalid && (registrationForm.controls['password'].dirty || registrationForm.controls['password'].touched)}"
+          >
+          <small *ngIf="registrationForm.controls['password'].errors?.required" class="form-text invalid-feedback">Password is required.</small>
+          <small *ngIf="registrationForm.controls['password'].errors?.serverError" class="form-text invalid-feedback">{{ registrationForm.controls['password'].errors.serverError }}</small>
         </div>
 
         <div class="form-footer text-right">

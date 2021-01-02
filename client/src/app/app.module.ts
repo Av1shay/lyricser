@@ -13,7 +13,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { ApiInterceptorService } from './services/api-interceptor.service';
+import { ApiInterceptor } from './helpers/api-interceptor';
 import {ReactiveFormsModule} from '@angular/forms';
 import SongService from './services/song.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +29,7 @@ import {MatInputModule} from '@angular/material/input';
 import {NgxPaginationModule} from 'ngx-pagination';
 import { WordContextDialogComponent } from './components/words/word-context-dialog/word-context-dialog.component';
 import UserService from './services/user.service';
+import {ErrorInterceptor} from '@app/helpers/error-interceptor';
 
 
 
@@ -63,7 +64,8 @@ import UserService from './services/user.service';
     SongService,
     WordService,
     UserService,
-    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptorService, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
   entryComponents: [
     NewSongDialogComponent

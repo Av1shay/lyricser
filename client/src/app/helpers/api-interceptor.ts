@@ -2,7 +2,7 @@ import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs';
 import {environment} from '../../environments/environment';
 
-export class ApiInterceptorService implements HttpInterceptor {
+export class ApiInterceptor implements HttpInterceptor {
   apiUrl: string;
 
   constructor() {

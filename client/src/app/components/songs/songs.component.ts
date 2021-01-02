@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import SongService from '../../services/song.service';
-import Song from '../../Models/Song';
+import Song from '../../models/Song';
 import {plainToClass} from 'class-transformer';
 import {MatDialog} from '@angular/material/dialog';
 import {NewSongDialogComponent} from './new-song-dialog/new-song-dialog.component';
-import User from '../../Models/User';
+import User from '../../models/User';
 import UserService from '../../services/user.service';
 import {Router} from '@angular/router';
 

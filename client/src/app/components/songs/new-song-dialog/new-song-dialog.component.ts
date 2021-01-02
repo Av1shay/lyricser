@@ -4,7 +4,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {RxwebValidators} from '@rxweb/reactive-form-validators';
 import SongService from '../../../services/song.service';
 import {plainToClass} from 'class-transformer';
-import AddNewSongData from '../../../Models/AddNewSongData';
+import AddNewSongData from '../../../models/AddNewSongData';
 
 
 @Component({

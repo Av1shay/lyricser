@@ -1,4 +1,4 @@
-import Word from '../Models/Word';
+import Word from '../models/Word';
 
 export type WordPositions = 'start' | 'middle' | 'end';
 

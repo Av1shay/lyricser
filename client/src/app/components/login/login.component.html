@@ -9,19 +9,44 @@
       <h3>Login</h3>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-frm">
-        <div class="form-group">
-          <label for="loginEmail">Email address</label>
-          <input type="email" class="form-control" id="loginEmail" formControlName="email" placeholder="Enter email">
-        </div>
-        <div class="form-group">
-          <label for="loginPassword">Password</label>
-          <input type="password" class="form-control" id="loginPassword" formControlName="password" placeholder="Password" autocomplete="off">
+
+        <div *ngIf="loginForm.errors?.generalError" class="alert alert-danger mt-2" role="alert">
+          {{ loginForm.errors.generalError }}
         </div>
 
-<!--        <div class="form-check">-->
-<!--          <input type="checkbox" class="form-check-input" id="exampleCheck1">-->
-<!--          <label class="form-check-label" for="exampleCheck1">Check me out</label>-->
-<!--        </div>-->
+        <div class="form-group">
+          <label for="loginEmail">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="loginEmail"
+            formControlName="email"
+            placeholder="Enter email"
+            [ngClass]="{'form-control': true, 'is-invalid': loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)}"
+          >
+          <small *ngIf="loginForm.controls['email'].errors?.required" class="form-text invalid-feedback">Email is required.</small>
+          <small *ngIf="loginForm.controls['email'].errors?.serverError" class="form-text invalid-feedback">{{ loginForm.controls['email'].errors.loginForm }}</small>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            formControlName="password"
+            placeholder="Password"
+            autocomplete="off"
+            [ngClass]="{'form-control': true, 'is-invalid': loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)}"
+          >
+          <small *ngIf="loginForm.controls['password'].errors?.required" class="form-text invalid-feedback">Passowrd is required.</small>
+          <small *ngIf="loginForm.controls['password'].errors?.serverError" class="form-text invalid-feedback">{{ loginForm.controls['password'].errors.loginForm }}</small>
+        </div>
+
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" id="rememberMe" formControlName="rememberMe">
+          <label class="form-check-label" for="rememberMe">Remember me</label>
+        </div>
         <div class="form-footer text-right">
           <button type="submit" class="btn btn-primary" [disabled]="!loginForm.valid">Submit</button>
         </div>

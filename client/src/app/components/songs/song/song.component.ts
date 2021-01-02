@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { forkJoin } from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import Song from '../../../Models/Song';
+import Song from '../../../models/Song';
 import SongService from '../../../services/song.service';
 import {plainToClass} from 'class-transformer';
 

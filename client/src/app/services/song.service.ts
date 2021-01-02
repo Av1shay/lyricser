@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import Song from '../Models/Song';
+import Song from '../models/Song';
 import {IHttpParams} from '../typing/app';
 
 
