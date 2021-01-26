@@ -52,13 +52,15 @@ class WordRepository implements WordRepositoryInterface
 
         if (!empty($filter['wordTerm'])) {
             $query->where('value', 'like', "%{$filter['wordTerm']}%");
+        } else if (!empty($filter['words']) && is_array($filter['words'])) {
+            $query->whereIn('value', $filter['words']);
         }
 
         $totalCount = $query->count();
 
         if (!empty($filter['maxResults'])) {
             if (!empty($filter['nextCursor'])) {
-                $query->where('id', '>', intval($filter['nextCursor']));
+                $query->where('id', '>=', intval($filter['nextCursor']));
             }
 
             $limitWithNextRow = $filter['maxResults'] + 1;
@@ -66,12 +68,12 @@ class WordRepository implements WordRepositoryInterface
             $query->limit($limitWithNextRow);
 
             $results = $query->get();
-            $reCount = count($results);
+            $resCount = count($results);
 
-            if ($reCount == $limitWithNextRow) {
+            if ($resCount == $limitWithNextRow) {
                 // next cursor is the id of the last record
-                $nextCursor = $results[$reCount - 1]['id'];
-                unset($results[$reCount - 1]);
+                $nextCursor = $results[$resCount - 1]['id'];
+                $results->forget($resCount - 1);
             }
         } else {
             $results = $query->get();

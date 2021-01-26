@@ -33,9 +33,8 @@ export default class Song {
   @Type(() => Boolean)
   wordsProcessed: boolean;
 
-  @Type(() => Number)
   @Expose({ name: 'upload_by' })
-  uploadBy: number;
+  uploadBy: string | number;
 
   @Type(() => Date)
   @Expose({ name: 'created_at' })

@@ -1,0 +1,16 @@
+.results {
+  .words-section-wrapper {
+    min-height: 80vh;
+  }
+  .word-index-wrapper {
+    font-size: 1.2rem;
+
+    .word {
+      cursor: pointer;
+      font-weight: lighter;
+    }
+  }
+}
+.loader-wrapper {
+  min-height: 70vh;
+}

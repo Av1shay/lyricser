@@ -1,0 +1,23 @@
+<div class="user-expressions-wrapper">
+  <div class="user-expressions">
+    <h4>Expressions</h4>
+    <div class="row">
+      <div *ngFor="let expressionData of expressions; let i = index" class="col-sm-3" (mouseover)="displayedDeleteBtn = i" (mouseout)="displayedDeleteBtn = -1">
+        <div class="card mb-2">
+          <div class="card-body">
+            <span [ngClass]="{'delete': true, 'position-absolute': true, 'show': i === displayedDeleteBtn}" (click)="removeExp(expressionData.id)">Delete</span>
+            <p class="card-text font-italic">{{ expressionData.expression }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bag-row" #appendForm></div>
+
+  </div>
+
+  <div>
+    <button *ngIf="showAddNewFormBtn" (click)="addNewForm()" class="btn btn-sm btn-light" role="button">Add new expression +</button>
+  </div>
+
+</div>

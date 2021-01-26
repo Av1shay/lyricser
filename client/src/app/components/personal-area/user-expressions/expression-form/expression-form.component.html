@@ -1,0 +1,23 @@
+<form [formGroup]="form" (submit)="onSubmit()" class="w-50">
+  <div class="form-group mb-1 mr-2">
+    <label for="expression" class="sr-only">Expression</label>
+    <input
+      type="text"
+      class="form-control form-control-sm"
+      id="expression"
+      formControlName="expression"
+      autocomplete="off"
+      placeholder="Expression"
+      [ngClass]="{
+        'form-control': true,
+        'form-control-sm': true,
+        'is-invalid': form.controls['expression'].invalid && (form.controls['expression'].dirty || form.controls['expression'].touched)
+      }"
+    >
+  </div>
+
+  <div class="form-footer text-right">
+    <button type="button" class="btn btn-secondary-outline btn-xs" (click)="selfClose()">Cancel</button>
+    <button type="submit" class="btn btn-primary btn-xs" [disabled]="!form.valid">Save</button>
+  </div>
+</form>

@@ -3,24 +3,24 @@
 
 namespace App\Services;
 
-
-use App\Enums\QueryTypes;
 use App\Enums\WordPositions;
 use App\Http\Responses\QueryWordsResponse;
+use App\Models\User;
 use App\Models\Word;
 use App\Repositories\Contracts\WordRepositoryInterface;
+use App\Services\Contracts\WordServiceInterface;
 use \Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\Types\Mixed_;
 
-class WordService implements Contracts\WordServiceInterface
+
+class WordService implements WordServiceInterface
 {
 
     const WORD_PADDING_SIZE = 4;
 
-    protected string $wordsIndexCacheKey = 'words_index';
+    protected string $wordsContextListCacheKey = 'words_context_list';
 
     protected WordRepositoryInterface $wordRepository;
 
@@ -29,28 +29,34 @@ class WordService implements Contracts\WordServiceInterface
         $this->wordRepository = $wordRepository;
     }
 
-    public function queryWords(string $type, array $data): QueryWordsResponse
+    public function queryWords(array $data, User $user = null): QueryWordsResponse
     {
-        switch ($type) {
-            case QueryTypes::List:
-                return $this->wordRepository->query($data);
+        if (isset($data['bagId']) && $user !== null) {
+            $bags = $user->getMeta('words_bags');
+            $bagIndex = array_search($data['bagId'], array_column($bags, 'id'));
 
-            case QueryTypes::Index: default:
-                $words = Cache::get($this->wordsIndexCacheKey);
-
-                if (!$words) {
-                    $words = $this->refreshWordsIndexCache();
-                }
-
-                $wordsIndex = $this->_mapWordsToContext($words);
-
-                if (!empty($data)) {
-                    $wordsIndex = $this->_filterWords($data, $wordsIndex);
-                }
-
-                return new QueryWordsResponse($wordsIndex->count(), $wordsIndex, null);
+            if ($bagIndex !== false) {
+                $data['words'] = $bags[$bagIndex]['words'];
+                unset($data['bagId']);
+            }
         }
 
+        return $this->wordRepository->query($data);
+    }
+
+    public function getWordsWithContext(array $data)
+    {
+        $words = Cache::get($this->wordsContextListCacheKey);
+
+        if (!$words) {
+            $words = $this->refreshWordsContextListCache();
+        }
+
+//        if (!empty($data)) {
+//            $wordsIndex = $this->_filterWords($data, $wordsIndex);
+//        }
+
+        return new QueryWordsResponse($words->count(), $words, null);
     }
 
     public function addWords(array $words): void
@@ -68,14 +74,13 @@ class WordService implements Contracts\WordServiceInterface
      *
      * @return Collection
      */
-    public function refreshWordsIndexCache(): Collection
+    public function refreshWordsContextListCache(): Collection
     {
         $queryRes = $this->wordRepository->query([]);
-        $words = $queryRes->words;
-        $wordsIndex = $words->groupBy('value', true);
+        $wordsByValue = $queryRes->words->groupBy('value', true);
 
         // Map each word to it's data
-        $collection = $wordsIndex->map(function (Collection $words) {
+        $collection = $wordsByValue->map(function (Collection $words) {
             return $words->map(fn (Word $word) => [
                 'id' => $word->id,
                 'songId' => $word->song_id,
@@ -85,8 +90,10 @@ class WordService implements Contracts\WordServiceInterface
             ])->values()->all();
         });
 
-        Cache::forget($this->wordsIndexCacheKey);
-        Cache::put($this->wordsIndexCacheKey, $collection);
+        $collection = $this->_mapWordsToContext($collection);
+
+        Cache::forget($this->wordsContextListCacheKey);
+        Cache::put($this->wordsContextListCacheKey, $collection);
 
         return $collection;
     }
@@ -108,10 +115,10 @@ class WordService implements Contracts\WordServiceInterface
         $startPosHelper = [];
 
         // Build new associate collection where wordId points the word data
-        $wordsIndex->each(function (array $wordsData, string $workVal) use (&$words) {
+        $wordsIndex->each(function (array $wordsData, string $wordVal) use (&$words) {
             foreach ($wordsData as $wordData) {
                 $id = $wordData['id'];
-                $words[$id] = Arr::add($wordData, 'value', $workVal);
+                $words[$id] = Arr::add($wordData, 'value', $wordVal);
             }
         });
 
@@ -127,7 +134,7 @@ class WordService implements Contracts\WordServiceInterface
             // If this word is a start word, or is right after start word, we need to make sure we don't take words before the start word
             if ($pos == WordPositions::Start || !empty($startPosHelper)) {
                 $startPosHelper[] = $index;
-                $before = $words->slice($startPosHelper[0], $index);
+                $before = $words->slice($startPosHelper[0], ($index - $startPosHelper[0]));
             } else {
                 $before = $words->slice(($index - $paddingSize), $paddingSize);
             }

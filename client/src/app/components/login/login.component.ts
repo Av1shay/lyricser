@@ -41,12 +41,31 @@ export class LoginComponent implements OnInit {
           }
         },
         err => {
-          if (err.status === 400 && err?.error?.err) {
+          if (LoginComponent.badReqError(err)) {
             const errMsg = err.error.err;
             this.loginForm.setErrors({
               // Pass the error message from the server
               generalError: errMsg,
             });
+          } else if (LoginComponent.validationError(err)) {
+            const { errors } = err.error;
+
+            for (const field in errors) {
+              if (!errors.hasOwnProperty(field)) continue;
+
+              switch (field) {
+                case 'email':
+                  this.loginForm.controls['email'].setErrors({
+                    serverError: errors[field][0] || '',
+                  });
+                  break;
+                case 'password':
+                  this.loginForm.controls['password'].setErrors({
+                    serverError: errors[field][0] || '',
+                  });
+                  break;
+              }
+            }
           }
         }
       )
@@ -54,5 +73,13 @@ export class LoginComponent implements OnInit {
 
   cameFromSongsPage(): boolean {
     return this.router.parseUrl(this.router.url).queryParams?.referrer === 'add-new-song';
+  }
+
+  private static validationError(err): boolean {
+    return err.status === 400 && err?.error?.err
+  }
+
+  private static badReqError(err): boolean {
+    return err.status === 400 && err?.error?.err
   }
 }

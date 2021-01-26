@@ -30,4 +30,8 @@ export default class WordService {
 
     return this.http.get<QueryWordsResponse>('/api/word', { params: httpParams });
   }
+
+  getWordsWithContext(): Observable<any> {
+    return this.http.get<QueryWordsResponse>('/api/word/context');
+  }
 }

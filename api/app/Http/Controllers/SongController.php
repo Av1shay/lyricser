@@ -6,17 +6,21 @@ use App\Exceptions\SongNotFoundException;
 use App\Http\Requests\CreateSong;
 use App\Models\Song;
 use App\Services\Contracts\SongServiceInterface;
+use App\Services\Contracts\UserServiceInterface;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
 {
-    protected $songService;
+    protected SongServiceInterface $songService;
 
-    public function __construct(SongServiceInterface $songService)
+    protected UserServiceInterface $userService;
+
+    public function __construct(SongServiceInterface $songService, UserServiceInterface $userService)
     {
         $this->songService = $songService;
+        $this->userService = $userService;
     }
 
     /**
@@ -35,6 +39,13 @@ class SongController extends Controller
         ];
 
         $songs = $this->songService->querySongs($data);
+
+        $songs = $songs->map(function ($song) {
+            $uploadByUser = $this->userService->getUserById(intval($song['upload_by']));
+            $song['upload_by'] = $uploadByUser->name ?? '';
+
+            return $song;
+        });
 
         return response()->json($songs);
     }

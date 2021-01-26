@@ -8,7 +8,7 @@
 
   <ul class="list-group list-group-flush" mat-dialog-content>
     <li *ngFor="let context of contextList" class="list-group-item">
-      {{ context.before }} <strong>{{ word }}</strong> {{ context.after }}
+      {{ context.before }} <strong>{{ word }}</strong> {{ context.after }} <small>(song #{{ context.songId }})</small>
     </li>
   </ul>
 </div>

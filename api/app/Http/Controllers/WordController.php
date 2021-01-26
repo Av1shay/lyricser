@@ -24,18 +24,23 @@ class WordController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = $request->only(['queryType', 'songId', 'wordTerm', 'maxResults', 'page', 'nextCursor',]);
-
-        $type = $query['queryType'] ?? QueryTypes::List;
+        $query = $request->only(['songId', 'wordTerm', 'maxResults', 'nextCursor', 'bagId']);
 
         $data = [
             'songId' => isset($query['songId']) ? intval($query['songId']) : null,
             'wordTerm' => isset($query['wordTerm']) ? urldecode($query['wordTerm']) : null,
             'maxResults' => isset($query['maxResults']) ? intval($query['maxResults']) : null,
+            'bagId' => isset($query['bagId']) ? $query['bagId'] : null,
             'nextCursor' => $query['nextCursor'] ?? null,
         ];
 
-        $queryWordsRes = $this->wordService->queryWords($type, $data);
+        $queryWordsRes = $this->wordService->queryWords($data, $request->user());
+
+        return response()->json($queryWordsRes->toArray());
+    }
+
+    public function getWordsWithContext(Request $request) {
+        $queryWordsRes = $this->wordService->getWordsWithContext([]);
 
         return response()->json($queryWordsRes->toArray());
     }

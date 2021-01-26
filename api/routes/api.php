@@ -19,14 +19,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/me', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
+    Route::get('/me', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::post('/{id}/wordsBag', [UserController::class, 'storeWordsBag']);
+    Route::delete('/{id}/wordsBag/{bagId}', [UserController::class, 'deleteWordsBag']);
+    Route::post('/{id}/expression', [UserController::class, 'storeExpression']);
+    Route::delete('/{id}/expression/{expressionId}', [UserController::class, 'deleteExpression']);
 });
 
 Route::post('/register', [RegistrationController::class, 'store']);
-
 Route::post('/login', [LoginController::class, 'authenticate']);
-
 Route::post('/logout', [LoginController::class, 'logout']);
 
 
@@ -40,6 +45,7 @@ Route::prefix('song')->group(function () {
 
 Route::prefix('word')->group(function () {
     Route::get('/', [WordController::class, 'index']);
+    Route::get('/context', [WordController::class, 'getWordsWithContext']);
     Route::get('/song/{songId}', [WordController::class, 'getSongWords']);
 });
 

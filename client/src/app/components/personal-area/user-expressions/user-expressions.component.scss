@@ -1,0 +1,19 @@
+.user-expressions-wrapper {
+  .card-body {
+    padding: 0.5rem;
+    .delete {
+      display: none;
+      top: 0;
+      right: 0;
+      font-size: 60%;
+      cursor: pointer;
+      color: #dc3545;
+    }
+    .card-text {
+      font-size: 90%;
+    }
+  }
+}
+.show {
+  display: block !important;
+}

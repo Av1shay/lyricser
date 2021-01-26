@@ -15,10 +15,11 @@ export class WordContextDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<WordContextDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: { trigger: ElementRef, word: string, contextList: WordContext[] }
-    ) {
+  ) {
     this.triggerElementRef = data.trigger;
     this.word = data.word;
     this.contextList = data.contextList;
+    console.log(this.contextList)
   }
 
   ngOnInit(): void {

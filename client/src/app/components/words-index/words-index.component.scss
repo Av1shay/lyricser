@@ -25,13 +25,11 @@
 .loader-wrapper {
   min-height: 70vh;
 }
-.index-results {
-  .word-index-wrapper {
-    font-size: 1.2rem;
-
-    .word {
-      cursor: pointer;
-      font-weight: lighter;
-    }
+.bags-opts {
+  min-width: 15rem;
+}
+.results {
+  .words-section-wrapper {
+    min-height: 75vh;
   }
 }

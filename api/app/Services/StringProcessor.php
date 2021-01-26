@@ -7,8 +7,6 @@ namespace App\Services;
 use App\Enums\WordPositions;
 use App\Models\Song;
 use App\Services\Contracts\WordServiceInterface;
-use Illuminate\Support\Facades\Cache;
-use App\Repositories\Contracts\WordRepositoryInterface;
 use App\Services\Contracts\UploaderInterface;
 use Carbon\Carbon;
 use Exception;
@@ -42,6 +40,10 @@ class StringProcessor
         $now = Carbon::now()->toDateTimeString();
         $wordsToInsert = [];
         $songContent = $this->uploader->getFileContent($song->text_filename);
+
+        // Remove any commas and dots
+        $songContent = preg_replace('/[.,]/', '', $songContent);
+
         $stanzasDelimiter = $song->stanzas_delimiter;
         $stanzas = explode($stanzasDelimiter, $songContent);
 
@@ -60,6 +62,11 @@ class StringProcessor
 
                 // Go over the words in each line
                 foreach ($words as $wordIndex => $word) {
+                    if (empty($word)) {
+                        $wordsOffset += 1;
+                        continue;
+                    }
+
                     $startIndex = strpos($stanzaContent, $word, $wordsOffset);
 
                     if ($startIndex == 0) { // This word is at the beginning of the stanza?
@@ -95,6 +102,6 @@ class StringProcessor
 
         $song->save();
 
-        $this->wordService->refreshWordsIndexCache();
+        $this->wordService->refreshWordsContextListCache();
     }
 }

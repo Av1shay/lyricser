@@ -1,4 +1,5 @@
 import {Exclude, Expose, Type} from 'class-transformer';
+import MetaData from '@app/models/MetaData';
 
 
 @Expose()
@@ -27,4 +28,8 @@ export default class User {
   @Expose({ name: 'created_at' })
   @Type(() => Date)
   createdAt: Date;
+
+  @Expose({ name: 'meta_data' })
+  @Type(() => MetaData)
+  metaData: MetaData;
 }

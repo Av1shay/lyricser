@@ -20,16 +20,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
 import { NavComponent } from './components/nav/nav.component';
 import { SongsComponent } from './components/songs/songs.component';
-import { WordsComponent } from './components/words/words.component';
 import { PersonalAreaComponent } from './components/personal-area/personal-area.component';
 import { SongComponent } from './components/songs/song/song.component';
 import WordService from './services/word.service';
 import { NewSongDialogComponent } from './components/songs/new-song-dialog/new-song-dialog.component';
 import {MatInputModule} from '@angular/material/input';
 import {NgxPaginationModule} from 'ngx-pagination';
-import { WordContextDialogComponent } from './components/words/word-context-dialog/word-context-dialog.component';
+import { WordContextDialogComponent } from './components/words-list/word-context-dialog/word-context-dialog.component';
 import UserService from './services/user.service';
 import {ErrorInterceptor} from '@app/helpers/error-interceptor';
+import { WordsBagsFormComponent } from './components/personal-area/user-bags/words-bags-form/words-bags-form.component';
+import { UserBagsComponent } from './components/personal-area/user-bags/user-bags.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { WordsIndexComponent } from './components/words-index/words-index.component';
+import { WordsListComponent } from './components/words-list/words-list.component';
+import { UserExpressionsComponent } from './components/personal-area/user-expressions/user-expressions.component';
+import { ExpressionFormComponent } from './components/personal-area/user-expressions/expression-form/expression-form.component';
 
 
 
@@ -39,12 +45,17 @@ import {ErrorInterceptor} from '@app/helpers/error-interceptor';
     LoginComponent,
     NavComponent,
     SongsComponent,
-    WordsComponent,
     PersonalAreaComponent,
     SongComponent,
     NewSongDialogComponent,
     WordContextDialogComponent,
     RegisterComponent,
+    WordsBagsFormComponent,
+    UserBagsComponent,
+    WordsIndexComponent,
+    WordsListComponent,
+    UserExpressionsComponent,
+    ExpressionFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,6 +70,7 @@ import {ErrorInterceptor} from '@app/helpers/error-interceptor';
     RxReactiveFormsModule,
     MatInputModule,
     NgxPaginationModule,
+    FontAwesomeModule,
   ],
   providers: [
     SongService,

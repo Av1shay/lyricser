@@ -84,8 +84,7 @@ class SongService implements SongServiceInterface
 
     public function findAll(): Collection
     {
-        return $this->songRepository
-            ->findAll();
+        return $this->songRepository->findAll();
     }
 
     public function querySongs(array $data): Collection

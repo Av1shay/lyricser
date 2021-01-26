@@ -1,0 +1,33 @@
+<div class="words-list-wrapper">
+
+  <h3>Words List</h3>
+
+  <div *ngIf="showLoader; else resultsBlock" class="loader-wrapper">
+    <mat-spinner [diameter]="50" class="my-5"></mat-spinner>
+  </div>
+
+  <ng-template #resultsBlock>
+    <div *ngIf="(words | json) != '{}'" class="results my-4">
+      <div class="container words-section-wrapper mb-4">
+        <div class="row">
+          <div *ngFor="let word of words | keyvalue | paginate: {
+              itemsPerPage: wordsPerPage,
+              currentPage: page,
+              totalItems: wordsCount
+            }"
+            class="word-index-wrapper col-md-1 col-sm-2 col-3 mb-2 text-center"
+          >
+            <a [ngClass]="['word', 'badge', 'badge-success']" (click)="onWordClick($event, word.key, word.value)">
+              {{ word.key }} <span class="badge badge-light">{{ word.value.length }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination-wrapper">
+        <pagination-controls (pageChange)="page = $event" autoHide="true" class="pagination-controls hide-page-numbers text-center"></pagination-controls>
+      </div>
+    </div>
+  </ng-template>
+
+</div>

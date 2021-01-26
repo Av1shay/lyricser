@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c602cff602c1ab894a524163005ad72",
+    "content-hash": "f314fd6c4caea6826ca2e34593f3d601",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -891,6 +891,62 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.7.0"
             },
             "time": "2020-09-30T07:37:11+00:00"
+        },
+        {
+            "name": "kodeine/laravel-meta",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kodeine/laravel-meta.git",
+                "reference": "cec58dbef7665ec612d8aade32b914a607272bb1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kodeine/laravel-meta/zipball/cec58dbef7665ec612d8aade32b914a607272bb1",
+                "reference": "cec58dbef7665ec612d8aade32b914a607272bb1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0|~5.1|^6.0|^7.0|^8.0",
+                "php": ">=5.4.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "classmap": [],
+                "psr-0": {
+                    "Kodeine\\Metable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ahsen M.",
+                    "homepage": "https://github.com/kodeine",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Fluent Meta Data for Eloquent Models, as if it is a property on your model.",
+            "keywords": [
+                "data",
+                "eloquent",
+                "kodeine",
+                "laravel",
+                "meta",
+                "meta data",
+                "metable",
+                "metadata",
+                "metas",
+                "model"
+            ],
+            "support": {
+                "issues": "https://github.com/kodeine/laravel-meta/issues",
+                "source": "https://github.com/kodeine/laravel-meta/tree/master"
+            },
+            "time": "2020-11-07T17:03:10+00:00"
         },
         {
             "name": "laravel/framework",
