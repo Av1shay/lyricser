@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import Song from '../models/Song';
-import {IHttpParams} from '../typing/app';
+import {IHttpParams, QueryResponse} from '../typing/app';
 
 
 @Injectable({
@@ -15,14 +15,22 @@ export default class SongService {
     return this.http.post<Song>('/api/song', data);
   }
 
-  getSongs(params?: IHttpParams): Observable<Song[]> {
+  getSongs(params?: IHttpParams): Observable<QueryResponse<Song>> {
     let httpParams = {};
 
     if (params) {
-      httpParams = new HttpParams({ fromObject: params });
+      for (let key in params) {
+        if (params.hasOwnProperty(key) && params[key]) {
+          httpParams[key] = params[key];
+        }
+      }
+
+      console.log(httpParams);
+
+      httpParams = new HttpParams({ fromObject: httpParams });
     }
 
-    return this.http.get<Song[]>('/api/song', { params: httpParams });
+    return this.http.get<QueryResponse<Song>>('/api/song', { params: httpParams });
   }
 
   getSongById(id: number, params?: { [param: string]: string }): Observable<any> {

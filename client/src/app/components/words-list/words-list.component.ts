@@ -24,7 +24,7 @@ export class WordsListComponent implements OnInit {
     this.wordService.getWordsWithContext()
       .subscribe(
         res => {
-          this.words = res.words;
+          this.words = res.items;
           this.wordsCount = res.count;
         },
         err => console.error(err),

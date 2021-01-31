@@ -7,18 +7,25 @@ import {NewSongDialogComponent} from './new-song-dialog/new-song-dialog.componen
 import User from '../../models/User';
 import UserService from '../../services/user.service';
 import {Router} from '@angular/router';
+import {QueryResponse} from '@app/typing/app';
+import PageableComponent from '@app/components/PageableComponent';
 
+//TODO pass to config
+export const MAX_SONGS_RESULTS = 10;
 
 @Component({
   selector: 'app-songs',
   templateUrl: './songs.component.html',
   styleUrls: ['./songs.component.scss']
 })
-export class SongsComponent implements OnInit {
+export class SongsComponent extends PageableComponent implements OnInit {
   currentUser: User;
   songs: Song[] = null;
   showSpinner: boolean = true;
   hasError: boolean = false;
+  songsPerPage: number;
+  songsCount: number = 0;
+  queryData;
 
   constructor(
     private router: Router,
@@ -26,7 +33,16 @@ export class SongsComponent implements OnInit {
     private songService: SongService,
     private dialog: MatDialog
   ) {
+    super();
+
     this.userService.currentUser.subscribe(user => this.currentUser = user);
+
+    this.songsPerPage = MAX_SONGS_RESULTS;
+
+    this.queryData = {
+      maxResults: String(this.songsPerPage),
+      nextCursor: null,
+    }
 
     if (this.currentUser && this.router.parseUrl(this.router.url).queryParams?.referrer === 'add-new-song') {
       this.openDialog();
@@ -34,21 +50,7 @@ export class SongsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.songService.getSongs()
-      .subscribe(
-        (songs: Song[]) => {
-          if (songs.length > 0) {
-            this.songs = plainToClass(Song, songs);
-          } else {
-            this.songs = [];
-          }
-        },
-        err => {
-          console.error(err)
-          this.hasError = true;
-        },
-        () => this.showSpinner = false,
-      )
+   this.setSongs(this.queryData);
   }
 
   openDialog(): void {
@@ -67,9 +69,51 @@ export class SongsComponent implements OnInit {
         return;
       }
 
-      const song = plainToClass(Song, res.data);
-      this.songs = [song, ...this.songs];
+      // Reset the view
+      this.queryData = {
+        maxResults: String(this.songsPerPage),
+        nextCursor: null,
+      }
+      this.setSongs();
     });
   }
 
+  onSongsUpdate(queryData): void {
+    this.setSongs(queryData);
+  }
+
+  pageChanged(page: number) {
+    const nextCursor = this.getNextCursor(page);
+    this.queryData.nextCursor = String(nextCursor);
+    this.setSongs();
+  }
+
+  private setSongs(queryData?): void {
+    this.showSpinner = true;
+
+    if (queryData) {
+      Object.assign(this.queryData, queryData);
+    }
+
+    this.songService.getSongs(this.queryData)
+      .subscribe(
+        (res: QueryResponse<Song>) => {
+          if (res.items.length > 0) {
+            this.songs = plainToClass(Song, res.items);
+            this.songsCount = res.totalCount;
+
+            if (this.shouldPushCursor(res.nextCursor)) {
+              this.cursors.push(res.nextCursor);
+            }
+          } else {
+            this.songs = [];
+          }
+        },
+        err => {
+          console.error(err)
+          this.hasError = true;
+        },
+        () => this.showSpinner = false,
+      )
+  }
 }

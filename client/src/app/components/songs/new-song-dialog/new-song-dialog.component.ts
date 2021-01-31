@@ -22,9 +22,7 @@ export class NewSongDialogComponent implements OnInit {
     private songService: SongService,
     public dialogRef: MatDialogRef<NewSongDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.form = new FormGroup({
       title: new FormControl(null, Validators.required),
       writer: new FormControl(null, Validators.required),
@@ -39,6 +37,8 @@ export class NewSongDialogComponent implements OnInit {
       ]),
     });
   }
+
+  ngOnInit(): void {}
 
   onSubmit(): void {
     if (!this.form.valid) {

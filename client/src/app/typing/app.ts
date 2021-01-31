@@ -22,8 +22,8 @@ export interface WordsContext {
   [wordVal: string]: WordContext[];
 }
 
-export interface QueryWordsResponse {
-  words: Word[];
+export interface QueryResponse<T> {
+  items: T[];
   totalCount: number;
   nextCursor?: string | number;
 }

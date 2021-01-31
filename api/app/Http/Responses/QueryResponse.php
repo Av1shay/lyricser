@@ -6,20 +6,20 @@ namespace App\Http\Responses;
 
 use Illuminate\Support\Collection;
 
-class QueryWordsResponse
+class QueryResponse
 {
     public int $totalCount;
-    public Collection $words;
+    public Collection $items;
 
     /**
      * @var int | string | null
      */
     public $nextCursor;
 
-    public function __construct(int $totalCount, Collection $words, $nextCursor)
+    public function __construct(int $totalCount, Collection $items, $nextCursor)
     {
         $this->totalCount = $totalCount;
-        $this->words = $words;
+        $this->items = $items;
         $this->nextCursor = $nextCursor;
     }
 
@@ -27,7 +27,7 @@ class QueryWordsResponse
     {
         return [
             'totalCount' => $this->totalCount,
-            'words' => $this->words->toArray(),
+            'items' => $this->items->toArray(),
             'nextCursor' => $this->nextCursor,
         ];
     }

@@ -24,6 +24,16 @@
       </mat-option>
     </mat-autocomplete>
 
+    <div class="form-group mr-2 small-form-group">
+      <label class="sr-only" for="line">Line</label>
+      <input type="number" id="line" class="form-control form-control-sm w-100" placeholder="Line" formControlName="line">
+    </div>
+
+    <div class="form-group mr-2 small-form-group">
+      <label class="sr-only" for="stanza">Stanza</label>
+      <input type="number" id="stanza" class="form-control form-control-sm w-100" placeholder="Stanza" formControlName="stanza">
+    </div>
+
     <div class="form-footer d-flex">
       <button type="submit" class="btn btn-primary btn-sm align-self-start">Submit</button>
       <button type="button" class="btn btn-sm ml-1" (click)="resetForm()">Clear</button>
@@ -51,8 +61,8 @@
             class="col-md-1 col-sm-2 col-3"
           >
             <div class="word-item d-flex flex-column my-1 py-2 border-bottom justify-content-between align-items-end">
-              <span class="d-flex align-self-start"><em>{{word.value}}</em></span>
-              <span class="word-meta d-flex align-self-start"><small>Song Number: {{word.songId}} Line:{{word.line}} Stanza: {{word.stanza}}</small></span>
+              <span class="d-flex align-self-start"><em><a routerLink="/songs/{{word.songId}}">{{word.value}}</a></em></span>
+              <span class="word-meta d-flex align-self-start"><small>Line:{{word.line}} Stanza: {{word.stanza}}</small></span>
             </div>
           </div>
         </div>

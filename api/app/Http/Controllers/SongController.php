@@ -31,23 +31,28 @@ class SongController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = $request->only(['title', 'maxResults',]);
+        $query = $request->only(['title', 'writer','words', 'expressionId', 'nextCursor', 'maxResults',]);
+        $querySanitized = [];
 
-        $data = [
-            'title' => isset($query['title']) ? urldecode($query['title']) : null,
-            'maxResults' => isset($query['maxResults']) ? intval($query['maxResults']) : null,
-        ];
+        foreach ($query as $paramKey => $paramVal) {
+            if ($paramKey == 'words') {
+                $querySanitized[$paramKey] = explode(',', urldecode($paramVal));
+            } else if (is_numeric($paramVal)) {
+                $querySanitized[$paramKey] = intval($paramVal);
+            } else {
+                $querySanitized[$paramKey] = urldecode($paramVal);
+            }
+        }
 
-        $songs = $this->songService->querySongs($data);
+        $songsQueryRes = $this->songService->querySongs($querySanitized, $request->user());
 
-        $songs = $songs->map(function ($song) {
+        $songsQueryRes->items = $songsQueryRes->items->map(function ($song) {
             $uploadByUser = $this->userService->getUserById(intval($song['upload_by']));
             $song['upload_by'] = $uploadByUser->name ?? '';
-
             return $song;
         });
 
-        return response()->json($songs);
+        return response()->json($songsQueryRes->toArray());
     }
 
     /**

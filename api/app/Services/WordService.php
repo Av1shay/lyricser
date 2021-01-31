@@ -4,7 +4,7 @@
 namespace App\Services;
 
 use App\Enums\WordPositions;
-use App\Http\Responses\QueryWordsResponse;
+use App\Http\Responses\QueryResponse;
 use App\Models\User;
 use App\Models\Word;
 use App\Repositories\Contracts\WordRepositoryInterface;
@@ -29,7 +29,7 @@ class WordService implements WordServiceInterface
         $this->wordRepository = $wordRepository;
     }
 
-    public function queryWords(array $data, User $user = null): QueryWordsResponse
+    public function queryWords(array $data, User $user = null): QueryResponse
     {
         if (isset($data['bagId']) && $user !== null) {
             $bags = $user->getMeta('words_bags');
@@ -56,7 +56,7 @@ class WordService implements WordServiceInterface
 //            $wordsIndex = $this->_filterWords($data, $wordsIndex);
 //        }
 
-        return new QueryWordsResponse($words->count(), $words, null);
+        return new QueryResponse($words->count(), $words, null);
     }
 
     public function addWords(array $words): void
@@ -77,7 +77,7 @@ class WordService implements WordServiceInterface
     public function refreshWordsContextListCache(): Collection
     {
         $queryRes = $this->wordRepository->query([]);
-        $wordsByValue = $queryRes->words->groupBy('value', true);
+        $wordsByValue = $queryRes->items->groupBy('value', true);
 
         // Map each word to it's data
         $collection = $wordsByValue->map(function (Collection $words) {

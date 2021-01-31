@@ -1,0 +1,30 @@
+<form [formGroup]="form" method="get" class="form-inline" (submit)="onSubmit()">
+
+  <div class="form-group">
+    <label for="title" class="sr-only">Title</label>
+    <input type="text" id="title" class="form-control form-control-sm" formControlName="title" placeholder="Song Title..."/>
+  </div>
+
+  <div class="form-group ml-2">
+    <label for="writer" class="sr-only">Writer</label>
+    <input type="text" id="writer" class="form-control form-control-sm" formControlName="writer" placeholder="Song Writer..."/>
+  </div>
+
+  <div class="form-group ml-2 long-form-group">
+    <label for="words" class="sr-only">Words</label>
+    <input type="text" id="words" class="form-control form-control-sm" formControlName="words" placeholder="Words (Comma separated)"/>
+  </div>
+
+  <div *ngIf="userExpressions?.length > 0" class="form-group ml-2">
+    <label for="expressionId" class="sr-only">Expressions</label>
+    <select id="expressionId" formControlName="expressionId" class="custom-select-sm custom-select bags-opts mr-2">
+      <option [ngValue]="null" selected>Filter by expression</option>
+      <option *ngFor="let expression of userExpressions" value="{{ expression.id }}">{{ expression.expression }}</option>
+    </select>
+  </div>
+
+  <div class="form-group ml-2">
+    <input type="submit" class="btn btn-outline-secondary btn-sm" value="Filter"/>
+  </div>
+
+</form>

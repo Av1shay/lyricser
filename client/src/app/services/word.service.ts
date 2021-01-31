@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import Word from '../models/Word';
-import {IHttpParams, QueryWordsResponse} from '../typing/app';
+import {IHttpParams, QueryResponse} from '../typing/app';
 
 
 @Injectable({
@@ -15,7 +15,7 @@ export default class WordService {
     return this.http.get<Word[]>('/api/word/song/' + songId);
   }
 
-  getWords(params?: IHttpParams): Observable<QueryWordsResponse> {
+  getWords(params?: IHttpParams): Observable<QueryResponse<Word>> {
     let httpParams = {};
 
     for (const key in params) {
@@ -28,10 +28,10 @@ export default class WordService {
       httpParams = new HttpParams({ fromObject: params });
     }
 
-    return this.http.get<QueryWordsResponse>('/api/word', { params: httpParams });
+    return this.http.get<QueryResponse<Word>>('/api/word', { params: httpParams });
   }
 
   getWordsWithContext(): Observable<any> {
-    return this.http.get<QueryWordsResponse>('/api/word/context');
+    return this.http.get<QueryResponse<Word>>('/api/word/context');
   }
 }

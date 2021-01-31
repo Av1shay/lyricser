@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {IHttpParams, QueryWordsResponse} from '@app/typing/app';
+import {IHttpParams, QueryResponse} from '@app/typing/app';
 import {Expose, plainToClass, Transform, Type} from 'class-transformer';
 import Word from '@app/models/Word';
 import WordService from '@app/services/word.service';
@@ -11,6 +11,7 @@ import Song from '@app/models/Song';
 import {Observable, Subscription} from 'rxjs';
 import SongService from '@app/services/song.service';
 import User from '@app/models/User';
+import PageableComponent from '@app/components/PageableComponent';
 
 interface ISongOption {
   id: number;
@@ -24,6 +25,12 @@ class QueryData extends IHttpParams {
 
   @Type(() => String)
   bagId?: string;
+
+  @Type(() => String)
+  line?: string;
+
+  @Type(() => String)
+  stanza?: string;
 
   @Type(() => String)
   maxResults?: string;
@@ -41,7 +48,7 @@ const MAX_SONGS_RESULTS = 20;
   templateUrl: './words-index.component.html',
   styleUrls: ['./words-index.component.scss']
 })
-export class WordsIndexComponent implements OnInit, OnDestroy {
+export class WordsIndexComponent extends PageableComponent implements OnInit, OnDestroy {
   readonly wordsPerPage = MAX_WORDS_RESULTS;
 
   form: FormGroup;
@@ -49,8 +56,6 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
   showLoader: boolean = true;
   words: Word[];
   wordsCount: number = 0;
-  cursors: Array<string | number> = [];
-  page: number = 0;
   bags: WordsBag[];
   showSongsSpinner: boolean = false;
   songsOptions: ISongOption[] = [];
@@ -60,9 +65,13 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
 
 
   constructor(private wordService: WordService, private userService: UserService, private songService: SongService) {
+    super();
+
     this.form = new FormGroup({
       song: new FormControl(null),
       bagId: new FormControl(null),
+      line: new FormControl(null),
+      stanza: new FormControl(null),
     });
 
     this.queryData = {
@@ -91,8 +100,8 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
         switchMap((term: string) => this.getSongsByTitle(term)),
         tap(() => this.showSongsSpinner = false),
       )
-      .subscribe((songs: Song[]) => {
-        this.songsOptions = songs.map(song => {
+      .subscribe((res: QueryResponse<Song>) => {
+        this.songsOptions = res.items.map(song => {
           return { id: song.id, title: String(song.title) }
         })
       });
@@ -118,26 +127,8 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(page: number) {
-    let nextCursor;
-    const prev = page < this.page;
-
-    this.page = page;
-
-    if (prev) {
-      this.cursors.pop();
-      const len = this.cursors.length;
-
-      if (len > 1) {
-        nextCursor = this.cursors[len - 2];
-      } else {
-        nextCursor = null;
-      }
-    } else {
-      nextCursor = this.cursors[this.cursors.length - 1];
-    }
-
+    const nextCursor = this.getNextCursor(page);
     this.queryData.nextCursor = String(nextCursor);
-
     this.setWords();
   }
 
@@ -147,6 +138,7 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.queryData = plainToClass(QueryData, this.form.value);
+    console.log(this.queryData);
     this.page = 0;
     this.isQueryWithBagId = this.queryData.bagId !== null;
 
@@ -163,8 +155,8 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
 
     this.wordService.getWords(this.queryData)
       .subscribe(
-        (res: QueryWordsResponse) => {
-          this.words = plainToClass(Word, res.words);
+        (res: QueryResponse<Word>) => {
+          this.words = plainToClass(Word, res.items);
 
           this.wordsCount = res.totalCount;
 
@@ -177,12 +169,7 @@ export class WordsIndexComponent implements OnInit, OnDestroy {
       )
   }
 
-  private shouldPushCursor(cursor: string | number) {
-    const cursorsLen = this.cursors.length;
-    return cursor && (cursorsLen === 0 || this.cursors[cursorsLen - 1] !== cursor);
-  }
-
-  private getSongsByTitle(title?: string): Observable<Song[]> {
+  private getSongsByTitle(title?: string): Observable<QueryResponse<Song>> {
     if (title && title.length > 0) {
       return this.songService.getSongs({ title });
     }

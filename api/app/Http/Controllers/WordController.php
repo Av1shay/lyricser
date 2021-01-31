@@ -24,12 +24,14 @@ class WordController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = $request->only(['songId', 'wordTerm', 'maxResults', 'nextCursor', 'bagId']);
+        $query = $request->only(['songId', 'wordTerm', 'maxResults', 'nextCursor', 'bagId', 'line', 'stanza']);
 
         $data = [
             'songId' => isset($query['songId']) ? intval($query['songId']) : null,
             'wordTerm' => isset($query['wordTerm']) ? urldecode($query['wordTerm']) : null,
             'maxResults' => isset($query['maxResults']) ? intval($query['maxResults']) : null,
+            'line' => isset($query['line']) ? intval($query['line']) : null,
+            'stanza' => isset($query['stanza']) ? intval($query['stanza']) : null,
             'bagId' => isset($query['bagId']) ? $query['bagId'] : null,
             'nextCursor' => $query['nextCursor'] ?? null,
         ];

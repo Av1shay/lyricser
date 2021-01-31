@@ -3,7 +3,7 @@
 
 namespace App\Repositories;
 
-use App\Http\Responses\QueryWordsResponse;
+use App\Http\Responses\QueryResponse;
 use App\Models\Word;
 use App\Repositories\Contracts\WordRepositoryInterface;
 use Exception;
@@ -41,7 +41,7 @@ class WordRepository implements WordRepositoryInterface
         }
     }
 
-    public function query(array $filter): QueryWordsResponse
+    public function query(array $filter): QueryResponse
     {
         $nextCursor = null;
         $query = Word::query();
@@ -54,6 +54,14 @@ class WordRepository implements WordRepositoryInterface
             $query->where('value', 'like', "%{$filter['wordTerm']}%");
         } else if (!empty($filter['words']) && is_array($filter['words'])) {
             $query->whereIn('value', $filter['words']);
+        }
+
+        if (!empty($filter['line'])) {
+            $query->where('line', '=', $filter['line']);
+        }
+
+        if (!empty($filter['stanza'])) {
+            $query->where('stanza', '=', $filter['stanza']);
         }
 
         $totalCount = $query->count();
@@ -79,6 +87,6 @@ class WordRepository implements WordRepositoryInterface
             $results = $query->get();
         }
 
-        return new QueryWordsResponse($totalCount, $results, $nextCursor);
+        return new QueryResponse($totalCount, $results, $nextCursor);
     }
 }

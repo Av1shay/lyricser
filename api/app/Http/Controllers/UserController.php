@@ -21,7 +21,7 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    public function index(string $userId, Request $request)
+    public function index(string $userId)
     {
         return $this->userService->getWordsBags(intval($userId));
     }

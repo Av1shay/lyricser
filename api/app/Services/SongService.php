@@ -5,8 +5,10 @@ namespace App\Services;
 
 
 use App\Exceptions\SongNotFoundException;
+use App\Http\Responses\QueryResponse;
 use App\Jobs\ProcessWords;
 use App\Models\Song;
+use App\Models\User;
 use App\Repositories\Contracts\SongRepositoryInterface;
 use App\Services\Contracts\SongServiceInterface;
 use App\Services\Contracts\UploaderInterface;
@@ -87,8 +89,8 @@ class SongService implements SongServiceInterface
         return $this->songRepository->findAll();
     }
 
-    public function querySongs(array $data): Collection
+    public function querySongs(array $data, ?User $user): QueryResponse
     {
-        return $this->songRepository->query($data);
+        return $this->songRepository->query($data, $user);
     }
 }

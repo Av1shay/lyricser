@@ -36,6 +36,7 @@ import { WordsIndexComponent } from './components/words-index/words-index.compon
 import { WordsListComponent } from './components/words-list/words-list.component';
 import { UserExpressionsComponent } from './components/personal-area/user-expressions/user-expressions.component';
 import { ExpressionFormComponent } from './components/personal-area/user-expressions/expression-form/expression-form.component';
+import { QueryFormComponent } from './components/songs/query-form/query-form.component';
 
 
 
@@ -56,6 +57,7 @@ import { ExpressionFormComponent } from './components/personal-area/user-express
     WordsListComponent,
     UserExpressionsComponent,
     ExpressionFormComponent,
+    QueryFormComponent,
   ],
   imports: [
     BrowserModule,
