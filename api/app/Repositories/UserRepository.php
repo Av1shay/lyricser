@@ -127,4 +127,33 @@ class UserRepository implements UserRepositoryInterface
 
         return false;
     }
+
+    public function update(int $userId, array $data): bool
+    {
+        $user = User::find($userId);
+
+        if (!$user) {
+            throw new \Exception('User ID not found');
+        }
+
+        if (isset($data['email'])) {
+            $emailExist = User::where('email', '=', $data['email'])
+                ->where('id', '!=', $userId)
+                ->count();
+
+            if ($emailExist) {
+                throw new \Exception('Email already exist');
+            }
+
+            $user->email = $data['email'];
+        }
+
+        if (isset($data['fullName'])) {
+            $user->name = $data['fullName'];
+        }
+
+        $user->save();
+
+        return true;
+    }
 }

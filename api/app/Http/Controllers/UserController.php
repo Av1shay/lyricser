@@ -45,4 +45,14 @@ class UserController extends Controller
     {
         return $this->userService->deleteExpression(intval($userId), $expressionId);
     }
+
+    public function update(Request $request) {
+        $data = $request->only(['fullName', 'email']);
+        try {
+            $this->userService->updateUser($request->user()->id, $data);
+            return response()->json(['updated' => 1]);
+        } catch (\Exception $ex) {
+            return response()->json(['error' => 1, 'message' => $ex->getMessage()], 500);
+        }
+    }
 }

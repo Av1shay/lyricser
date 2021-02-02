@@ -37,6 +37,8 @@ import { WordsListComponent } from './components/words-list/words-list.component
 import { UserExpressionsComponent } from './components/personal-area/user-expressions/user-expressions.component';
 import { ExpressionFormComponent } from './components/personal-area/user-expressions/expression-form/expression-form.component';
 import { QueryFormComponent } from './components/songs/query-form/query-form.component';
+import { HomeComponent } from './components/home/home.component';
+import StatsService from '@app/services/stats.service';
 
 
 
@@ -58,6 +60,7 @@ import { QueryFormComponent } from './components/songs/query-form/query-form.com
     UserExpressionsComponent,
     ExpressionFormComponent,
     QueryFormComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +81,7 @@ import { QueryFormComponent } from './components/songs/query-form/query-form.com
     SongService,
     WordService,
     UserService,
+    StatsService,
     { provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],

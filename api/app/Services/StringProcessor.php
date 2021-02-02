@@ -6,21 +6,26 @@ namespace App\Services;
 
 use App\Enums\WordPositions;
 use App\Models\Song;
+use App\Services\Contracts\StatsServiceInterface;
 use App\Services\Contracts\WordServiceInterface;
 use App\Services\Contracts\UploaderInterface;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 
 class StringProcessor
 {
     protected WordServiceInterface $wordService;
 
+    protected StatsServiceInterface $statsService;
+
     protected UploaderInterface $uploader;
 
-    public function __construct(WordServiceInterface $wordService, UploaderInterface $uploader)
+    public function __construct(WordServiceInterface $wordService, StatsServiceInterface $statsService, UploaderInterface $uploader)
     {
         $this->wordService = $wordService;
+        $this->statsService = $statsService;
         $this->uploader = $uploader;
     }
 
@@ -39,6 +44,9 @@ class StringProcessor
 
         $now = Carbon::now()->toDateTimeString();
         $wordsToInsert = [];
+        $charsCount = 0;
+        $wordsCount = 0;
+        $stanzasCount = 0;
         $songContent = $this->uploader->getFileContent($song->text_filename);
 
         // Remove any commas and dots
@@ -58,7 +66,7 @@ class StringProcessor
             foreach ($lines as $lineIndex => $lineContent) {
                 $lineNum = $lineIndex + 1;
                 $words = preg_split('/\s+/', $lineContent);
-                $wordsCount = count($words);
+                $wordsInLineCount = count($words);
 
                 // Go over the words in each line
                 foreach ($words as $wordIndex => $word) {
@@ -71,7 +79,7 @@ class StringProcessor
 
                     if ($startIndex == 0) { // This word is at the beginning of the stanza?
                         $position = WordPositions::Start;
-                    } else if ($lineIndex == ($linesCount - 1) && $wordIndex == ($wordsCount - 1)) { // This word is at the end of the stanza?
+                    } else if ($lineIndex == ($linesCount - 1) && $wordIndex == ($wordsInLineCount - 1)) { // This word is at the end of the stanza?
                         $position = WordPositions::End;
                     } else {
                         $position = WordPositions::Middle;
@@ -88,10 +96,18 @@ class StringProcessor
                         'updated_at' => $now,
                     ];
 
+                    $wordLength = strlen($word);
+
+                    $charsCount += $wordLength;
+
                     // increase the offset to skip this word in the next iterations, add one for space
-                    $wordsOffset += strlen($word) + 1;
+                    $wordsOffset += $wordLength + 1;
+
+                    $wordsCount++;
                 }
             }
+
+            $stanzasCount++;
         }
 
         if (count($wordsToInsert) > 0) {
@@ -101,6 +117,8 @@ class StringProcessor
         $song->words_processed = true;
 
         $song->save();
+
+        $this->statsService->updateStats($charsCount, $wordsCount, $stanzasCount, 1);
 
         $this->wordService->refreshWordsContextListCache();
     }

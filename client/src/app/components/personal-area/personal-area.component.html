@@ -1,20 +1,66 @@
 <div class="personal-area">
 
-  <h3>Personal Area</h3>
 
-  <div class="row my-3">
-    <div class="col-sm-5">
-      <div class="words-bags">
-        <app-user-bags [bags]="bags"></app-user-bags>
-      </div>
-    </div>
-    <div class="col-sm-5">
-      <div class="expression">
-        <app-user-expressions [expressions]="expressions"></app-user-expressions>
+  <div class="container mt-4">
+    <div class="stats row justify-content-center">
+
+      <div class="col-sm-8">
+
+        <div class="update-profile">
+          <div class="row">
+            <div class="col-sm-6 border p-3">
+              <h5 class="mb-2">Update Profile</h5>
+
+              <div *ngIf="sererError" class="alert alert-danger" role="alert">
+                {{ sererError }}
+              </div>
+
+              <form *ngIf="form" [formGroup]="form" (submit)="onSubmit()">
+                <div class="form-group">
+                  <label for="fullName">Full Name</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    formControlName="fullName"
+                    [ngClass]="{'form-control': true, 'is-invalid': form.controls['fullName'].invalid && (form.controls['fullName'].dirty || form.controls['fullName'].touched)}"
+                  >
+                  <small *ngIf="form.controls['fullName'].errors?.required" class="form-text invalid-feedback">FullName is required.</small>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    formControlName="email"
+                    [ngClass]="{'form-control': true, 'is-invalid': form.controls['email'].invalid && (form.controls['email'].dirty || form.controls['email'].touched)}"
+                  >
+                  <small *ngIf="form.controls['email'].errors?.required" class="form-text invalid-feedback">Email is required.</small>
+                </div>
+                <div class="form-group text-right">
+                  <mat-spinner *ngIf="showUpdateProfilerLoader" [diameter]="20" class="d-inline-block align-middle mr-3"></mat-spinner>
+                  <button type="submit" class="btn btn-primary btn-sm" [disabled]="!form.valid || isSameProfileData()">Update</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="row my-3">
+          <div class="col-sm-5">
+            <div class="words-bags">
+              <app-user-bags [bags]="bags"></app-user-bags>
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="expression">
+              <app-user-expressions [expressions]="expressions"></app-user-expressions>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
-
 
 
 </div>

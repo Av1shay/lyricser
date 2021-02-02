@@ -33,7 +33,6 @@ export class UserExpressionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log(this.expressions)
   }
 
   ngOnDestroy() {

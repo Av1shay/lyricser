@@ -13,4 +13,5 @@ interface UserRepositoryInterface
     public function upsertExpression(int $userId, array $data): array;
     public function deleteWordsBag(int $userId, string $bagId): bool;
     public function deleteExpression(int $userId, string $bagId): bool;
+    public function update(int $userId, array $data): bool;
 }

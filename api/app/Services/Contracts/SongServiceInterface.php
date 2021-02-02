@@ -15,4 +15,5 @@ interface SongServiceInterface
     public function getById(int $id): ?Song;
     public function getLyrics(int $id): string;
     public function findAll(): Collection;
+    public function getRecentSongs(): array;
 }

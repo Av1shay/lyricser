@@ -13,4 +13,5 @@ interface WordRepositoryInterface
     public function getWordsBySongId(int $songId): Collection;
     public function insertsWithTransaction(array $data): void;
     public function query(array $filter): QueryResponse;
+    public function getTopWords(int $count): array;
 }

@@ -14,6 +14,11 @@ export interface WordContext {
   after: string;
 }
 
+export interface TopWord {
+  value: string;
+  count: number;
+}
+
 export interface WordsIndex {
   [wordVal: string]: WordContext[];
 }

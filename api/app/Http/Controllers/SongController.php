@@ -31,7 +31,7 @@ class SongController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = $request->only(['title', 'writer','words', 'expressionId', 'nextCursor', 'maxResults',]);
+        $query = $request->only(['title', 'writer','words', 'expressionId', 'nextCursor', 'maxResults', 'orderBy']);
         $querySanitized = [];
 
         foreach ($query as $paramKey => $paramVal) {
@@ -55,13 +55,6 @@ class SongController extends Controller
         return response()->json($songsQueryRes->toArray());
     }
 
-    /**
-     * Get a specific resource.
-     *
-     * @param $id
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function getById($id, Request $request): JsonResponse
     {
         $songId = intval($id);
@@ -84,15 +77,10 @@ class SongController extends Controller
         return response()->json($song);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
+    public function getRecent()
     {
-
+        $songs = $this->songService->getRecentSongs();
+        return response()->json($songs);
     }
 
     /**

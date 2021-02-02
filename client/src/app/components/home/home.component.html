@@ -1,0 +1,53 @@
+<div class="home-wrapper">
+  <div class="container mt-4">
+    <div *ngIf="stats" class="stats row justify-content-center">
+      <div class="col-sm-8">
+        <div class="row mt-3 border p-2">
+          <div class="col-sm text-center border-right">
+            Songs <div class="stat-value text-success">{{ stats.songsCount }}</div>
+          </div>
+          <div class="col-sm text-center border-right">
+            Words <div class="stat-value text-success">{{ stats.wordsCount }}</div>
+          </div>
+          <div class="col-sm text-center border-right">
+            Avg Word Length <div class="stat-value text-success">{{ stats.avgWordsLength }}</div>
+          </div>
+          <div class="col-sm text-center border-right">
+            Avg Words Per Stanza <div class="stat-value text-success">{{ stats.avgWordsPerStanza }}</div>
+          </div>
+          <div class="col-sm text-center">
+            Avg Words Per Song <div class="stat-value text-success">{{ stats.avgWordsPerSong }}</div>
+          </div>
+        </div>
+
+        <div class="mt-5 mb-1 row home-second-section-wrapper justify-content-center">
+          <div class="col-sm-12">
+            <div class="row justify-content-around">
+              <div class="col-sm-5">
+                <div *ngIf="stats.topWords?.length > 0"  class="top-word-wrapper">
+                  <h5>Top Words</h5>
+                  <ul class="list-group list-group-flush">
+                    <li *ngFor="let topWord of stats.topWords" class="list-group-item d-flex justify-content-between align-items-center p-2">
+                      <span class="top-word-value">{{ topWord.value }}</span>
+                      <span class="badge badge-primary badge-pill">{{ topWord.count }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div *ngIf="recentSongs?.length > 0"  class="recent-songs-wrapper">
+                  <h5>Recent Words</h5>
+                  <ul class="list-group list-group-flush">
+                    <li *ngFor="let song of recentSongs" class="list-group-item d-flex align-items-center p-2">
+                      <a routerLink="/songs/{{ song.id }}">{{ song.title }}</a><small class="ml-2 song-by">by {{ song.writer }}</small>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

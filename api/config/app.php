@@ -229,4 +229,5 @@ return [
 
     ],
 
+    'top_words_limit' => env('APP_TOP_WORDS_LIMIT', 10),
 ];

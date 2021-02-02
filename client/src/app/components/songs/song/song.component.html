@@ -2,30 +2,18 @@
   <mat-spinner *ngIf="showLoader" [diameter]="70"></mat-spinner>
 
   <ng-container *ngIf="song">
-    <table class="table">
-      <thead>
-      <tr>
-        <td>Title</td>
-        <td>Writer</td>
-        <td>Composers</td>
-        <td>Performers</td>
-        <td>Published Date</td>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>{{ song.title }}</td>
-        <td>{{ song.writer }}</td>
-        <td>{{ song.composers }}</td>
-        <td>{{ song.performers }}</td>
-        <td>{{ song.published_at }}</td>
-      </tr>
-      </tbody>
-    </table>
+    <h4>{{ song.title }}</h4>
 
-    <div *ngIf="song?.lyrics.length > 0" class="lyrics mt-4">
+    <div class="song-metadata mt-3">
+      <div><strong>By</strong> {{ song.writer  }}</div>
+      <div><strong>Composers:</strong> {{ song.composers }}</div>
+      <div><strong>Performers:</strong> {{ song.performers }}</div>
+      <div><strong>Published Date:</strong> {{ song.publishedAt }}</div>
+    </div>
+
+    <div *ngIf="song?.lyrics.length > 0" class="lyrics mt-4 border-top border-success pt-3">
       <h5 class="mb-2">Lyrics</h5>
-      <pre>{{ song.lyrics }}</pre>
+      <pre id="lyrics" #lyricsBlock [innerHTML]="lyricsHtml || song.lyrics"></pre>
     </div>
 
   </ng-container>

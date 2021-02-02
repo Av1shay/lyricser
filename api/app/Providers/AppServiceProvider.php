@@ -3,17 +3,21 @@
 namespace App\Providers;
 
 use App\Repositories\Contracts\SongRepositoryInterface;
+use App\Repositories\Contracts\StatsRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\WordRepositoryInterface;
 use App\Repositories\SongRepository;
+use App\Repositories\StatsRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\WordRepository;
 use App\Services\Contracts\SongServiceInterface;
+use App\Services\Contracts\StatsServiceInterface;
 use App\Services\Contracts\UploaderInterface;
 use App\Services\Contracts\UserServiceInterface;
 use App\Services\Contracts\WordServiceInterface;
 use App\Services\LocalUploader;
 use App\Services\SongService;
+use App\Services\StatsService;
 use App\Services\UserService;
 use App\Services\WordService;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +37,8 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(UserRepositoryInterface::class, UserRepository::class);
 
+        $this->app->singleton(StatsRepositoryInterface::class, StatsRepository::class);
+
         $this->app->singleton(UploaderInterface::class, LocalUploader::class);
 
         // Provide services
@@ -46,6 +52,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(UserServiceInterface::class, function($app) {
             return new UserService($app->make(UserRepositoryInterface::class));
+        });
+
+        $this->app->singleton(StatsServiceInterface::class, function($app) {
+            return new StatsService($app->make(StatsRepositoryInterface::class), $app->make( WordRepositoryInterface::class));
         });
     }
 

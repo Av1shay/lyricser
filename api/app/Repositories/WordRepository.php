@@ -9,6 +9,7 @@ use App\Repositories\Contracts\WordRepositoryInterface;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class WordRepository implements WordRepositoryInterface
 {
@@ -88,5 +89,24 @@ class WordRepository implements WordRepositoryInterface
         }
 
         return new QueryResponse($totalCount, $results, $nextCursor);
+    }
+
+    public function getTopWords(int $count): array
+    {
+        if ($count < 1) {
+            Log::warning('Invalid $count value supplied', [
+                'count' => $count,
+                'method' => __METHOD__,
+            ]);
+            return [];
+        }
+
+        $query = Word::query()
+            ->select('value', DB::raw('count(*) as count'))
+            ->groupBy('value')
+            ->orderBy('count', 'desc')
+            ->limit($count);
+
+        return $query->get()->toArray();
     }
 }

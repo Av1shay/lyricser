@@ -8,6 +8,7 @@ import {RegisterComponent} from '@app/components/register/register.component';
 import AuthGuard from '@app/helpers/auth-guard';
 import {WordsIndexComponent} from '@app/components/words-index/words-index.component';
 import {WordsListComponent} from '@app/components/words-list/words-list.component';
+import {HomeComponent} from '@app/components/home/home.component';
 
 const routes: Routes = [
   { path: 'songs', component: SongsComponent, pathMatch: 'full' },
@@ -17,7 +18,7 @@ const routes: Routes = [
   { path: 'personal-area', component: PersonalAreaComponent, pathMatch: 'full', canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent, pathMatch: 'full' },
   { path: 'register', component: RegisterComponent, pathMatch: 'full' },
-  { path: '', redirectTo: 'songs', pathMatch: 'full', },
+  { path: '', component: HomeComponent, pathMatch: 'full', },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

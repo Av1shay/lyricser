@@ -25,8 +25,6 @@ export default class SongService {
         }
       }
 
-      console.log(httpParams);
-
       httpParams = new HttpParams({ fromObject: httpParams });
     }
 
@@ -35,5 +33,9 @@ export default class SongService {
 
   getSongById(id: number, params?: { [param: string]: string }): Observable<any> {
     return this.http.get<Song[]>('/api/song/' + id, { params });
+  }
+
+  getRecentSongs(): Observable<any>  {
+    return this.http.get<Song[]>('/api/song/recent');
   }
 }

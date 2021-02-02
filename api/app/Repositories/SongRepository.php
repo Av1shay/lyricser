@@ -38,7 +38,7 @@ class SongRepository implements SongRepositoryInterface
 
     public function findAll(): Collection
     {
-        return Song::orderBy('updated_at', 'desc')->get();
+        return $this->song->orderBy('updated_at', 'desc')->get();
     }
 
     public function query(array $data, ?User $user = null): QueryResponse
@@ -136,5 +136,18 @@ class SongRepository implements SongRepositoryInterface
             ->join('words', 'songs.id', '=', 'words.song_id')
             ->having('lyrics', 'LIKE', "%{$expression}%")
             ->groupBy('songs.id');
+    }
+
+    public function count(): int
+    {
+        return $this->song->count();
+    }
+
+    public function getRecent(int $count): array
+    {
+        return $this->song->orderBy('updated_at', 'desc')
+            ->limit($count)
+            ->get()
+            ->toArray();
     }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SongController;
+use App\Http\Controllers\StatsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WordController;
 use Illuminate\Http\Request;
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
         return $request->user();
     });
 
+    Route::patch('/', [UserController::class, 'update']);
     Route::post('/{id}/wordsBag', [UserController::class, 'storeWordsBag']);
     Route::delete('/{id}/wordsBag/{bagId}', [UserController::class, 'deleteWordsBag']);
     Route::post('/{id}/expression', [UserController::class, 'storeExpression']);
@@ -34,9 +36,12 @@ Route::post('/register', [RegistrationController::class, 'store']);
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/logout', [LoginController::class, 'logout']);
 
+Route::get('/stats', [StatsController::class, 'index']);
+
 
 Route::prefix('song')->group(function () {
     Route::get('/', [SongController::class, 'index']);
+    Route::get('/recent', [SongController::class, 'getRecent']);
     Route::get('/{id}', [SongController::class, 'getById']);
     Route::get('/{id}/lyrics', [SongController::class, 'getLyrics']);
     Route::post('/', [SongController::class, 'store'])

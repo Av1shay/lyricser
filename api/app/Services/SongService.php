@@ -19,15 +19,9 @@ use Illuminate\Http\UploadedFile;
 
 class SongService implements SongServiceInterface
 {
-    /**
-     * @var SongRepositoryInterface
-     */
-    protected $songRepository;
+    protected SongRepositoryInterface $songRepository;
 
-    /**
-     * @var UploaderInterface
-     */
-    protected $uploader;
+    protected UploaderInterface $uploader;
 
     public function __construct(SongRepositoryInterface $songRepository, UploaderInterface $uploader)
     {
@@ -92,5 +86,11 @@ class SongService implements SongServiceInterface
     public function querySongs(array $data, ?User $user): QueryResponse
     {
         return $this->songRepository->query($data, $user);
+    }
+
+    public function getRecentSongs(): array
+    {
+        $maxSongsCount = 10;
+        return $this->songRepository->getRecent($maxSongsCount);
     }
 }

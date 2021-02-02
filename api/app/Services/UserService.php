@@ -87,4 +87,17 @@ class UserService implements UserServiceInterface
 
         return $this->userRepository->deleteExpression($userId, $expressionId);
     }
+
+    public function updateUser(int $userId, array $data): bool
+    {
+        if ($userId < 1) {
+            Log::warning('Can not update user with invalid userId value', [
+                'userId' => $userId,
+                'method' => __METHOD__,
+            ]);
+            return false;
+        }
+
+        return $this->userRepository->update($userId, $data);
+    }
 }

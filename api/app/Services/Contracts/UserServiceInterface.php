@@ -13,4 +13,5 @@ interface UserServiceInterface
     public function upsertExpression(int $userId, array $expressionData): array;
     public function deleteWordsBag(int $userId, string $bagId): bool;
     public function deleteExpression(int $userId, string $expressionId): bool;
+    public function updateUser(int $userId, array $data): bool;
 }

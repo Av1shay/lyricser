@@ -3,12 +3,12 @@
     <button type="button" class="close" aria-label="Close" (click)="onNoClick()">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h5>{{ word }}</h5>
+    <small>Context list for </small><strong>{{ word }}</strong>
   </div>
 
   <ul class="list-group list-group-flush" mat-dialog-content>
     <li *ngFor="let context of contextList" class="list-group-item">
-      {{ context.before }} <strong>{{ word }}</strong> {{ context.after }} <small>(song #{{ context.songId }})</small>
+      "{{ context.before }} <strong>{{ word }}</strong> {{ context.after }}" <small>(song #{{ context.songId }})</small>
     </li>
   </ul>
 </div>
